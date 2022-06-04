@@ -58,7 +58,7 @@ public class TokenService implements ITokenService {
             responseToken.setScope("read write");
             responseToken.setJti(idJwt);
             responseToken.setAccess_token(accessToken);
-
+            responseToken.setRefresh_token("");
             responseToken.setUser(this.modelMapper.map(userInBd, ResponseForLogin.class));
 
             return responseToken;
