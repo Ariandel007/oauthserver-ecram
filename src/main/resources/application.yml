@@ -10,5 +10,5 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
-jwt-secret: asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4
+jwt-secret: asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK
 jwt-minute: 1

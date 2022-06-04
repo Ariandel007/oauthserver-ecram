@@ -4,6 +4,7 @@ import com.ecram.oauthserver.client.IUserClientRest;
 import com.ecram.oauthserver.dtos.request.UserCredentials;
 import com.ecram.oauthserver.dtos.response.ResponseForLogin;
 import com.ecram.oauthserver.dtos.response.ResponseToken;
+import com.ecram.oauthserver.dtos.response.RolAppDto;
 import com.ecram.oauthserver.dtos.response.UserApplicationDto;
 import com.ecram.oauthserver.services.ITokenService;
 import io.jsonwebtoken.Jwts;
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TokenService implements ITokenService {
@@ -39,12 +42,19 @@ public class TokenService implements ITokenService {
         String username = userCredentials.getUsername();
         UserApplicationDto userInBd = userClientRest.getUserByUsername(username).getBody();
 
+        Collection<String> authorities = userInBd.getRolAppList()
+                .stream()
+                .map(RolAppDto::getName)
+                .collect(Collectors.toList());
+
         if(this.passwordEncoder.matches(userCredentials.getPassword(),userInBd.getPassword())){
             Instant now = Instant.now();
             String idJwt = UUID.randomUUID().toString();
             String accessToken = Jwts.builder()
-                    .claim("username", userInBd.getUsername())
+//                    .claim("username", userInBd.getUsername())
                     .claim("email", userInBd.getEmail())
+                    .claim("user_name", userInBd.getUsername())
+                    .claim("authorities", authorities)
                     .setSubject(userInBd.getId().toString())
                     .setId(idJwt)
                     .setIssuedAt(Date.from(now))

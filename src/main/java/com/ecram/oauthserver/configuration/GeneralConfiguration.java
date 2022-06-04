@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 
@@ -26,7 +27,7 @@ public class GeneralConfiguration {
 
     @Bean(name = "hmacKey")
     public Key hmacKey(@Value("${jwt-secret}") String secret) {
-        return new SecretKeySpec(Base64.getDecoder().decode(secret),
+        return new SecretKeySpec(Base64.getEncoder().encode(secret.getBytes(StandardCharsets.UTF_8)),
                 SignatureAlgorithm.HS256.getJcaName());
     }
 
